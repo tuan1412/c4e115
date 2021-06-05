@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="ss7.css">
+  <style>
+    .box-model {
+      width: 200px;
+      height: 200px;
+      border: 12px solid #000;
+      padding-top: 24px;
+      padding-left: 12px;
+      margin: 12px;
+      overflow: auto;
+    }
+    .box-model-2 {
+      margin-top: 24px;
+      box-sizing: border-box;
+      /*
+        width, height tính content + padding + border
+      */
+    }
+    a {
+      width: 100px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <span>Hello</span>
+  <h1>Heading 1
+    <span>C4E truyên content dài</span>
+    <a href="index.html">File cũ</a>
+  </h1>
+  <div class="box-model">Box model content 1. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cupiditate vero eum perspiciatis voluptatum excepturi debitis reprehenderit voluptates accusamus nostrum. Explicabo sapiente minus magni quae ipsum dolores amet delectus quisquam iusto. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Et ducimus alias at. Magnam, quis porro cupiditate aut eligendi sed obcaecati quibusdam tenetur perferendis eveniet eius hic totam corrupti tempora iure.</div>
+  <div class="box-model box-model-2">Box model content 2</div>
+
+</body>
+</html>

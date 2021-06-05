@@ -1,0 +1,93 @@
+h1 {
+  color: #353535;
+  text-align: center;
+}
+
+#heading-1 {
+  color: orange;
+}
+
+.my-text.text-primary {
+  color: pink!important;
+}
+
+p {
+  font-size: 20px;
+  font-weight: bold;
+}
+/* selector (tên gọi) {
+  [property]: value
+} */
+
+h4 {
+  font-style: italic;
+}
+
+h6 {
+  text-align: right;
+}
+
+div {
+  text-decoration: underline;
+  text-decoration-color: blue;
+}
+/* h4 chữ nghiêng
+  h6: căn phải
+  div: gạch chân
+*/
+
+.text-red {
+  color: red;
+}
+
+.text-italic {
+  font-style: italic;
+}
+
+.bordered {
+  border: 1px solid #353535
+}
+
+.bordered-dotted-green {
+  border-bottom-width: 3px;
+  border-bottom-style: dotted;
+  border-bottom-color: green;
+}
+
+/* class selector */
+.bordered-dashed-green {
+  border-bottom: 3px dashed green;
+}
+
+/* id selector */
+#heading-1 {
+  background-color: grey;
+}
+
+h1 {
+  background-color: blue;
+}
+
+
+/* relationship selector */
+div p {
+  font-style: italic;
+}
+
+div span {
+  font-style: italic;
+}
+
+/* quan hệ anh em và tổ tiên là div */
+div p ~ span {
+  color: aqua;
+}
+
+h2:hover {
+  background-color: red;
+}
+
+/* sử dụng class selctor 
+=> h4 và thẻ p đầu tiên có border ở bên dưới 
+độ dày 3px, nét đứt, màu xanh lá cây
+*/
