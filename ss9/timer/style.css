@@ -1,0 +1,27 @@
+html, body {
+  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Mono', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* px, %, vh, em, rem, => CSS unit */
+.wrapper {
+  height: 100vh;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status {
+  text-align: right;
+}
+
+.time-container .count {
+  display: inline-block;
+  width: 100px;
+}
