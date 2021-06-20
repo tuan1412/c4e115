@@ -16,6 +16,8 @@ let projects = [
   }
 ]
 
+projects = localStorage.getItem('projects') ? JSON.parse(localStorage.getItem('projects')) : projects;
+
 // hiển thị list projects trong thẻ body
 // insert dom
 // insertAdjacentHTML
@@ -137,6 +139,10 @@ function renderProjects() {
     let updateBtn = updateButtons[i];
     updateBtn.addEventListener('click', updateProject);
   }
+
+  // chỉ lưu trình duyệt của mọi người => vẫn lưu client
+  // giữ lại được trạng thái khi load lại trang
+  localStorage.setItem('projects', JSON.stringify(projects));
 }
 
 renderProjects();
