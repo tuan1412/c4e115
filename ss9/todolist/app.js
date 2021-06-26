@@ -5,7 +5,7 @@ async function getComments() {
     {
       name: 'Project Test 2',
       task: 'Task test 1',
-      timeSpent: 0
+      timeSpent: 1
     },
     {
       name: 'Learn frontend',
