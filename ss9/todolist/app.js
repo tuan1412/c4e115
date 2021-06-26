@@ -1,20 +1,24 @@
-let projects = [
-  {
-    name: 'Project Test 2',
-    task: 'Task test 1',
-    timeSpent: 0
-  },
-  {
-    name: 'Learn frontend',
-    task: 'Learn HTML',
-    timeSpent: 6
-  },
-  {
-    name: 'Learn frontend',
-    task: 'Learn CSS',
-    timeSpent: 8
-  }
-]
+let projects = getComments();
+
+async function getComments() {
+  return [
+    {
+      name: 'Project Test 2',
+      task: 'Task test 1',
+      timeSpent: 0
+    },
+    {
+      name: 'Learn frontend',
+      task: 'Learn HTML',
+      timeSpent: 6
+    },
+    {
+      name: 'Learn frontend',
+      task: 'Learn CSS',
+      timeSpent: 8
+    }
+  ]
+}
 
 projects = localStorage.getItem('projects') ? JSON.parse(localStorage.getItem('projects')) : projects;
 
