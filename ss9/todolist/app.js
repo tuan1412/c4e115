@@ -1,154 +1,168 @@
-let projects = getComments();
+onLoad();
 
-async function getComments() {
-  return [
-    {
-      name: 'Project Test 2',
-      task: 'Task test 1',
-      timeSpent: 1
-    },
-    {
-      name: 'Learn frontend',
-      task: 'Learn HTML',
-      timeSpent: 6
-    },
-    {
-      name: 'Learn frontend',
-      task: 'Learn CSS',
-      timeSpent: 8
+async function onLoad() {
+  let projects = await getComments();
+
+  async function getComments() {
+    const res = await fetch('https://mx-c4e-server.herokuapp.com/projects');
+    const projects = await res.json();
+    return projects;
+  }
+
+  // hiển thị list projects trong thẻ body
+  // insert dom
+  // insertAdjacentHTML
+  // b1: lấy ra vị trị cần insert (dom cần insert)
+  // position: afterbegin, html element (string) => projects => html string
+  let resultEl = document.getElementById('result');
+  let formEl = document.getElementById('project-form');
+  let nameProjectEl = document.getElementById('name-project');
+  let taskProjectEl = document.getElementById('task-project');
+  let timeSpent = document.getElementById('time-project');
+  let addBtn = document.getElementById('add-btn');
+  let resetBtn = document.getElementById('clear-btn');
+
+  let updateProjectIdx = undefined;
+  let updateProjectId = undefined;
+
+  // tìm hiểu jQuery => trỏ DOM ngắn hơn ko gán cũng được
+  formEl.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    // ko có thằng nào cần update => form đang ở trạng thái add
+    if (typeof updateProjectIdx === 'undefined') {
+      addProject();
+    } else {
+      submitUpdateProject();
     }
-  ]
-}
+  });
 
-projects = localStorage.getItem('projects') ? JSON.parse(localStorage.getItem('projects')) : projects;
+  resetBtn.addEventListener('click', function () {
+    addBtn.innerHTML = 'Add';
+    updateProjectIdx = undefined;
+  });
 
-// hiển thị list projects trong thẻ body
-// insert dom
-// insertAdjacentHTML
-// b1: lấy ra vị trị cần insert (dom cần insert)
-// position: afterbegin, html element (string) => projects => html string
-let resultEl = document.getElementById('result');
-let formEl = document.getElementById('project-form');
-let nameProjectEl = document.getElementById('name-project');
-let taskProjectEl = document.getElementById('task-project');
-let timeSpent = document.getElementById('time-project');
-let addBtn = document.getElementById('add-btn');
-let resetBtn = document.getElementById('clear-btn');
+  // vấn đề (form => sử dụng 2 thao tác cả add và update)
+  // phân biệt được form đạng ở trạng thái nào
 
-let updateProjectIdx = undefined;
+  async function submitUpdateProject() {
+    let project = {
+      name: nameProjectEl.value,
+      task: taskProjectEl.value,
+      timeSpent: timeSpent.value
+    };
 
-// tìm hiểu jQuery => trỏ DOM ngắn hơn ko gán cũng được
-formEl.addEventListener('submit', function (event) {
-  event.preventDefault();
+    const res = await fetch('https://mx-c4e-server.herokuapp.com/projects/' + updateProjectId, {
+      method: 'PUT', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(project),
+    })
 
-  // ko có thằng nào cần update => form đang ở trạng thái add
-  if (typeof updateProjectIdx === 'undefined') {
-    addProject();
-  } else {
-    submitUpdateProject();
-  }
-})
+    const updateProject = await res.json();
 
-resetBtn.addEventListener('click', function() {
-  addBtn.innerHTML = 'Add';
-  updateProjectIdx = undefined;
-})
+    projects[updateProjectIdx] = updateProject; // update
+    renderProjects();
 
-// vấn đề (form => sử dụng 2 thao tác cả add và update)
-// phân biệt được form đạng ở trạng thái nào
-
-function submitUpdateProject() {
-  let project = {
-    name: nameProjectEl.value,
-    task: taskProjectEl.value,
-    timeSpent: timeSpent.value
+    formEl.reset();
+    addBtn.innerHTML = 'Add';
+    updateProjectIdx = undefined;
   }
 
-  projects[updateProjectIdx] = project; // update
-  renderProjects();
+  function updateProject(event) {
+    let targetBtn = event.target;
 
-  formEl.reset();
-  addBtn.innerHTML = 'Add';
-  updateProjectIdx = undefined;
-}
+    updateProjectIdx = targetBtn.getAttribute('data-row');
+    updateProjectId = targetBtn.getAttribute('data-id');
+    let updateProject = projects[updateProjectIdx];
 
-function updateProject(event) {
-  let targetBtn = event.target;
+    nameProjectEl.value = updateProject.name;
+    taskProjectEl.value = updateProject.task;
+    timeSpent.value = updateProject.timeSpent;
 
-  updateProjectIdx = targetBtn.getAttribute('data-row');
-  let updateProject = projects[updateProjectIdx];
-
-  nameProjectEl.value = updateProject.name;
-  taskProjectEl.value = updateProject.task;
-  timeSpent.value = updateProject.timeSpent;
-
-  addBtn.innerHTML = 'Update';
-}
-
-function addProject() {
-  // sự kiện mặc định của form submit => load trang mới
-  // muốn giữ nguyên trang cũ => xoá sự kiện mặc định của form
-  // ấn nút enter ở form => submit rồi => ko cần bắt buộc click button add
-  let project = {
-    name: nameProjectEl.value,
-    task: taskProjectEl.value,
-    timeSpent: timeSpent.value
+    addBtn.innerHTML = 'Update';
   }
-  projects.push(project);
-  renderProjects();
 
-  formEl.reset();
-}
+  async function addProject() {
+    // sự kiện mặc định của form submit => load trang mới
+    // muốn giữ nguyên trang cũ => xoá sự kiện mặc định của form
+    // ấn nút enter ở form => submit rồi => ko cần bắt buộc click button add
+    let project = {
+      name: nameProjectEl.value,
+      task: taskProjectEl.value,
+      timeSpent: timeSpent.value
+    };
+    // gọi lên server để lưu dữ liệu
+    const res = await fetch('https://mx-c4e-server.herokuapp.com/projects', {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(project),
+    })
 
-function deleteProject(event) {
-  let targetBtn = event.target;
+    const newProject = await res.json();
+    
+    projects.push(newProject);
+    renderProjects();
 
-  let rowDeleteIdx = targetBtn.getAttribute('data-row');
-  console.log(rowDeleteIdx);
-  // xoá project ở vị trị rowDeleteIdx
-  projects.splice(rowDeleteIdx, 1);
-  renderProjects();
-  // gọi hàm render
-}
+    formEl.reset();
+  }
 
-// mảng object => mảng string => join(): string
-// lưu trữ dữ liệu bằng thuộc tính
-function renderProjects() {
-  resultEl.innerHTML = '';
+  async function deleteProject(event) {
+    let targetBtn = event.target;
 
-  let htmlInsertProject = projects.map(function(project, idx) {
-    return `<tr>
+    let rowDeleteIdx = targetBtn.getAttribute('data-row');
+    let projectId = targetBtn.getAttribute('data-id')
+
+    await fetch('https://mx-c4e-server.herokuapp.com/projects/' + projectId, {
+      method: 'DELETE', // or 'PUT'
+    })
+
+    // xoá project ở vị trị rowDeleteIdx
+    projects.splice(rowDeleteIdx, 1);
+    renderProjects();
+    // gọi hàm render
+  }
+
+  // mảng object => mảng string => join(): string
+  // lưu trữ dữ liệu bằng thuộc tính
+  function renderProjects() {
+    resultEl.innerHTML = '';
+
+    let htmlInsertProject = projects
+      .map(function (project, idx) {
+        return `<tr>
       <td>${project.name}</td>
       <td>${project.task}</td>
       <td>${project.timeSpent}</td>
       <td>
-        <button class="btn-delete" data-row=${idx}>x</button>
-        <button class="btn-update" data-row=${idx}>u</button>
+        <button class="btn-delete" data-row=${idx} data-id=${project.id}>x</button>
+        <button class="btn-update" data-row=${idx} data-id=${project.id}>u</button>
       </td>
     </tr>`;
-  }).join('');
-  
-  resultEl.insertAdjacentHTML('afterbegin', htmlInsertProject);
+      })
+      .join('');
 
-  let delButtons = document.querySelectorAll('.btn-delete');
+    resultEl.insertAdjacentHTML('afterbegin', htmlInsertProject);
 
-  for (let i = 0; i < delButtons.length; i++) {
-    let delBtn = delButtons[i];
-    delBtn.addEventListener('click', deleteProject);
+    let delButtons = document.querySelectorAll('.btn-delete');
+
+    for (let i = 0; i < delButtons.length; i++) {
+      let delBtn = delButtons[i];
+      delBtn.addEventListener('click', deleteProject);
+    }
+
+    let updateButtons = document.querySelectorAll('.btn-update');
+
+    for (let i = 0; i < updateButtons.length; i++) {
+      let updateBtn = updateButtons[i];
+      updateBtn.addEventListener('click', updateProject);
+    }
   }
 
-  let updateButtons = document.querySelectorAll('.btn-update');
+  renderProjects();
 
-  for (let i = 0; i < updateButtons.length; i++) {
-    let updateBtn = updateButtons[i];
-    updateBtn.addEventListener('click', updateProject);
-  }
-
-  // chỉ lưu trình duyệt của mọi người => vẫn lưu client
-  // giữ lại được trạng thái khi load lại trang
-  localStorage.setItem('projects', JSON.stringify(projects));
+  // define dữ liệu mảng => CRUD là CRUD mảng => render HTML
 }
-
-renderProjects();
-
-// define dữ liệu mảng => CRUD là CRUD mảng => render HTML
